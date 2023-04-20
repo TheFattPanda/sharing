@@ -2,6 +2,26 @@ import random, os, time
 from inputimeout import inputimeout, TimeoutOccurred
 import json
 import datetime
+
+def get_player_choice(prompt, choices):
+    # Print out the prompt
+    for char in prompt:
+        time.sleep(0.03)
+        print(char, end = '', flush = True)
+    time.sleep(1)
+    match = False
+    p_input = ""
+    # Get the player's choice
+    while match == False:
+        p_input = input("\nEnter your choice: ").strip('\n')
+        # Check that the input is valid
+        for choice in choices:
+            print(choice, p_input, choice == p_input)
+            if choice == p_input:
+                match = True
+                return p_input
+
+
 JohanPhrases = ["Johan: They're probably off getting into some sort of trouble. I'll go them.",
                 "Johan: If my friends are not in the tavern, then they're probably up to something devious. I'll try and find them.",
                 "Johan: My companions? Oh, I'm sure they're causing chaos and mischief as we speak. I'll try and find them.",
@@ -16,6 +36,8 @@ JohanSneakPhrases = ["Johan: Watch out Captain!",
                      "Johan: Hide yourselves!",
                      "Johan: Don't get caught!",
                      "Johan: Look out!"]
+Dot_game = ["🔴", "🔴", "🔴", "🟡", "🟡", "🟢", "🟡", "🟡", "🔴", "🔴", "🔴"]
+
 game = {"progress": 0}
 with open('save.txt', 'w') as file:
     file.write(json.dumps(game))
@@ -86,7 +108,7 @@ if game == 1:
     with open('save.txt', 'r') as file:
         data = json.load(file)
     progress = int(data['progress'])
-elif game == 0 or progress == 0:
+elif game == 0 or progress == 0: #Senario 1
     os.system('clear')
     for char in "You are a pirate and are part of an organization called, Creed of Wolfheim.\nThe Creed of Wolfheim are having a conflict with another organization called the The Akatsuki of the Shadows.\nYour mission is to travel to Conomi a country, and assassinate the leader of The Akatsuki of the Shadows to stop the conflict.\nYou must be careful becasue the leader is known to have control of the land of Conomi, so you need to be stealthy.\nThe Creed of Wolfheim's main mission is to take away the Golden Staff of Eldagord from the leader of The Akatsuki of the Shadows.\nIt is an ancient artifact that holds great power, and there is a myth that it may be the key to the hidden gate that allows time travel.\nYou must be off to your journey now, Mr. Edward Kensmen.":
         time.sleep(0.025)
@@ -106,12 +128,7 @@ elif game == 0 or progress == 0:
         time.sleep(0.05)
         print(char, end="", flush=True)
     time.sleep(1)
-    for char in "Do you want to bring them along?(yes or no)":
-        time.sleep(0.05)
-        print(char, end="", flush=True)
-    time.sleep(1)
-    print("\n")
-    choice1 = input("Enter here: ")
+    choice1 = get_player_choice("Do you want to bring them along?(yes or no)", ["yes", "no"])
     if choice1 == 'yes':
         os.system('clear')
         for char in "Alright, bring them over.\n":
@@ -165,12 +182,7 @@ elif game == 0 or progress == 0:
         time.sleep(0.05)
         print(char, end="", flush=True)
     time.sleep(1)
-    for char in "Do you want to sneak into the warehouse(sneak) or have a shootout(shootout)?\n":
-        time.sleep(0.05)
-        print(char, end="", flush=True)
-    time.sleep(1)
-    print('\n')
-    choice2 = input("Enter here: ")
+    choice2 = get_player_choice("Do you want to sneak into the warehouse(sneak) or have a shootout(shootout)?", ["sneak","shootout"])
     if choice2 == 'sneak':
         os.system('clear')
         for char in "You and your crew try to sneak into the warehouse.":
@@ -183,11 +195,28 @@ elif game == 0 or progress == 0:
             time.sleep(0.07)
             print(char, end="", flush=True)
         time.sleep(0.9)
-        for char in "\nQuick! When you see the green dot press enter to hide from the enemies!":
+        for char in "\nQuick! When you see the green dot press enter to hide from the enemies!\n":
             time.sleep(0.05)
             print(char, end="", flush=True)
-        time.sleep(0.1)
-
+        time.sleep(1)
+        dot = 0
+        x = 0
+        while(x == 0):
+            for dot in range(0,10):
+                print(Dot_game[dot])
+                try:
+                    player_input = inputimeout(prompt = "", timeout = 1.00)
+                    if(player_input == ""):
+                        x = 1
+                        break
+                except Exception:
+                    continue
+                if(dot < 3 or dot == 8 or dot == 9 or dot == 10):
+                    print("You missed your shot, you lost some health")
+                elif (dot < 5 or dot == 6 or dot == 7):
+                    print("Your shot injuried the enemy.")
+                elif(dot < 6):
+                    print("Nice shot, the enemy is down!")
 
         os.system('clear')
         for char in "2:00 AM\nIn the warehouse\n":
@@ -215,4 +244,8 @@ elif game == 0 or progress == 0:
             print(char, end="", flush=True)
         for char in "\nPress enter when you see the green dot":
             time.sleep(0.05)
-        for char in "
+
+#TO DO LIST
+#if progress == 33 #Scenario 2
+#if progress == 66 #Scenario 3
+#This is for load
